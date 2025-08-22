@@ -33,6 +33,13 @@ var app = express();
 // Create HTTP server
 const server = http.createServer(app);
 
+// CORS configuration for frontend - Define this before Socket.IO
+const allowedOrigins = [
+  'http://localhost:3000',
+  'https://tungpt-front.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean); // Remove any undefined values
+
 // Initialize Socket.IO with CORS configuration
 const io = socketIo(server, {
   cors: {
@@ -412,12 +419,6 @@ app.use('/api/auth', authLimiter);
 app.use('/api/chat', chatLimiter);
 
 // CORS configuration for frontend
-const allowedOrigins = [
-  'http://localhost:3000',
-  'https://tungpt-front.vercel.app',
-  process.env.FRONTEND_URL
-].filter(Boolean); // Remove any undefined values
-
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
